@@ -21,4 +21,22 @@ services:
 
     depends_on:
       - redis
+
+
+  celery:
+    container_name: celery
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    
+    volumes:
+      - .:/app
+
+    environment:
+      - ALLOWED_HOSTS=localhost,127.0.0.1
+      - DEBUG=True
+      - SECRET_KEY=dcdcshsj@xsx
+
+    depends_on:
+      - redis
     
