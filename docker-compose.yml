@@ -1,5 +1,8 @@
 
 services:
+
+  redis:
+    image: redis:7.0.11-alpine
   
   django:
     container_name: django-celery-project
@@ -15,3 +18,7 @@ services:
       - ALLOWED_HOSTS=localhost,127.0.0.1
       - DEBUG=True
       - SECRET_KEY=dcdcshsj@xsx
+
+    depends_on:
+      - redis
+    
