@@ -28,7 +28,7 @@ services:
     build: 
       context: ./
       dockerfile: Dockerfile
-    command: celery --app=config worker -l INFO
+    command: celery --app=config.celery:app worker -l INFO
     volumes:
       - .:/app
 
