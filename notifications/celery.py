@@ -1,10 +1,11 @@
-
 import os
+
 from celery import Celery
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 
-# celery configuration service to be run beside project
+app = Celery("config")
 
-  os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
-  app = Celery('config')
-  app.conf.from_object('django.conf:settings',namespace='CELERY')
+app.config_from_object("django.conf:settings", namespace="CELERY")
+
+app.autodiscover_tasks()
