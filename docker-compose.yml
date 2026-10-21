@@ -5,13 +5,14 @@ services:
     image: redis:7.0.11-alpine
   
   django:
+    image: eshop_django
     container_name: django-celery-project
     build: 
-      context: ./
+      context: ./eshop
       dockerfile: Dockerfile
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/app
+      - ./eshop:/app
     ports:
       - "8000:8000"
     environment:
@@ -26,11 +27,11 @@ services:
   celery:
     container_name: celery
     build: 
-      context: ./
+      context: ./eshop
       dockerfile: Dockerfile
-    command: celery --app=config.celery:app worker -l INFO
+    command: celery --app=config.celery:app worker -l INFO -Q queue1
     volumes:
-      - .:/app
+      - ./eshop:/app
 
     environment:
       - ALLOWED_HOSTS=localhost,127.0.0.1
@@ -39,4 +40,20 @@ services:
 
     depends_on:
       - redis
-    
+      - django
+
+
+  stand_alone_celery:
+    container_name: stand_alone_celery
+    build:
+      context: ./celery_worker
+      dockerfile: Dockerfile
+    command: celery -A celery_base worker -l INFO -Q queue2
+    volumes:
+      - ./celery_worker:/app
+    environment:
+      - BROKER_URL=redis://redis:6379/0
+      - RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - redis
+      - django
