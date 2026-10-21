@@ -40,4 +40,20 @@ services:
 
     depends_on:
       - redis
-    
+      - django
+
+
+  stand_alone_celery:
+    container_name: stand_alone_celery
+    build:
+      context: ./celery_worker
+      dockerfile: Dockerfile
+    command: celery -A celery_base worker -l INFO
+    volumes:
+      - ./celery_worker:/app
+    environment:
+      - BROKER_URL=redis://redis:6379/0
+      - RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - redis
+      - django
