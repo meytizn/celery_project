@@ -29,7 +29,7 @@ services:
     build: 
       context: ./eshop
       dockerfile: Dockerfile
-    command: celery --app=config.celery:app worker -l INFO -Q queue1
+    command: celery --app=config.celery:app worker -l INFO -Q celery,celery:1,celery:2,celery:3
     volumes:
       - ./eshop:/app
 
@@ -43,17 +43,17 @@ services:
       - django
 
 
-  stand_alone_celery:
-    container_name: stand_alone_celery
-    build:
-      context: ./celery_worker
-      dockerfile: Dockerfile
-    command: celery -A celery_base worker -l INFO -Q queue2
-    volumes:
-      - ./celery_worker:/app
-    environment:
-      - BROKER_URL=redis://redis:6379/0
-      - RESULT_BACKEND=redis://redis:6379/0
-    depends_on:
-      - redis
-      - django
+  # stand_alone_celery:
+  #   container_name: stand_alone_celery
+  #   build:
+  #     context: ./celery_worker
+  #     dockerfile: Dockerfile
+  #   command: celery -A celery_base worker -l INFO -Q queue2
+  #   volumes:
+  #     - ./celery_worker:/app
+  #   environment:
+  #     - BROKER_URL=redis://redis:6379/0
+  #     - RESULT_BACKEND=redis://redis:6379/0
+  #   depends_on:
+  #     - redis
+  #     - django
