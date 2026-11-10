@@ -15,6 +15,10 @@ app.config_from_object("django.conf:settings", namespace="CELERY")
 # }
 
 
+# public tasks rate limit 
+# app.conf.task_default_rate_limit='1/m'
+
+
 
 # allocating redis queues to internal celery worker (Redis Message Broker )
 

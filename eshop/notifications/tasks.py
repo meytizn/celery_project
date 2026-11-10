@@ -4,7 +4,8 @@ import time
 
 #the tasks using redis queues (celery,celery:1,celery:2,celery:3)
 
-@shared_task
+# private task rate limit 
+@shared_task(rate_limit='1/m')
 def task_1(queue='celery'):
     time.sleep(3)
     return
